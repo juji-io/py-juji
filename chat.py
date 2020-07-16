@@ -28,7 +28,7 @@ mutation {
     
     b = '''
     }) {
-        success
+        success 
     }
 }'''
     
