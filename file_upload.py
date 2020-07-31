@@ -20,8 +20,9 @@ def on_message(ws, message):
             r = requests.post('https://juji.ai/api/analyze', headers = headers, files={'file': open(filename, 'rb')})
             print("TEXT: " + r.text)
             print("UPLOADED")
+            
+            ws.close()
         
-
 
 def on_error(ws, error):
     print("ERROR: " + error)

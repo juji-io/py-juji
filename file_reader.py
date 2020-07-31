@@ -14,15 +14,16 @@ mutation {
     }
 }'''
     
-    print("GOT MESSAGE")
-    print(message)
-    
     msg = json.loads(message)
     
-    if "data" in msg:
+    if "data" in msg and "chat" in msg["data"]:
         msgtype = msg["data"]["chat"]["type"]
         msgtext = msg["data"]["chat"]["text"]
         msgrole = msg["data"]["chat"]["role"]
+        
+        if not msgtext == None:
+            print("Bot Message: " +  msgtext)
+        
         
         if msgtype == "normal" and msgrole == "rep":
             
@@ -42,7 +43,6 @@ mutation {
                 line = temp.pop(0)
                 
                 payload = a + "\npid: " + '"' + _pid + '"' + "\ntext: " + '"' + line + '"' + b
-                print(payload)
                 ws.send(payload)
                 
                 count = 0 

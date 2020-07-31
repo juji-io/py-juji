@@ -14,29 +14,33 @@ mutation {
     }
 }'''
     
-    print("GOT MESSAGE")
-    print(message)
-        
     msg = json.loads(message)
     
-    if "chat" in msg["data"]:
-        
+    if "data" in msg and "chat" in msg["data"]:
         msgtype = msg["data"]["chat"]["type"]
         msgtext = msg["data"]["chat"]["text"]
         msgrole = msg["data"]["chat"]["role"]
         
-        if msgtype == "normal" and not msgtext[0:5] == "Hello" and msgrole == "rep":
+        if not msgtext == None:
+            print("Bot Message: " +  msgtext)
+        
+        if msgtype == "normal" and msgrole == "rep":
             
-            message = input("Send Message: ")
+            global count
+            count = count + 1
             
-            if message == "exit":
-                ws.close()
+            if count == 2:
                 
-            payload = a + "\npid: " + '"' + _pid + '"' + "\ntext: " + '"' + message + '"' + b
-            print(payload)
+                message = input("Send Message: ")
             
-            
-            ws.send(payload)
+                if message == "exit":
+                    ws.close()
+                    
+                payload = a + "\npid: " + '"' + _pid + '"' + "\ntext: " + '"' + message + '"' + b
+                           
+                ws.send(payload)
+                count = 0
+                
 
 def on_error(ws, error):
     print(error)
@@ -67,9 +71,11 @@ def on_open(ws):
 def connect(wsurl, pid):
     
     global _pid 
+    global count
+    
+    count = 0
     _pid = pid
     
-    websocket.enableTrace(True)
     ws = websocket.WebSocketApp(wsurl,
                               on_message = on_message,
                               on_error = on_error,
